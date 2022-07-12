@@ -1,4 +1,8 @@
+import { useState } from 'react';
+
 function Home() {
+  const [value, setValue] = useState({});
+
   return (
     <div
       className="text-center d-flex flex-column justify-content-center align-content-center"

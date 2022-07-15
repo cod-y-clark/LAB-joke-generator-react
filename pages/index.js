@@ -2,42 +2,39 @@ import { useState } from 'react';
 import getJoke from '../api/jokeData';
 
 function Home() {
-  const [btnText, setBtnText] = useState('Get A Joke');
-  const [jokeText, setJokeText] = useState({});
-
-  const setButton = (str) => {
-    setBtnText(str);
-  };
+  const [btnTxt, setBtnTxt] = useState('Get Joke');
+  const [joke, setJoke] = useState(0);
 
   const jokeGetter = () => {
-    getJoke().then((obj) => {
-      setJokeText({
-        setup: obj.setup,
-        delivery: obj.delivery,
-      });
-
-      setButton('Get Punchline');
-    });
+    if (btnTxt === 'Get Joke') {
+      getJoke().then((response) => setJoke(response));
+      setBtnTxt('Get Punchline');
+    } else if (btnTxt === 'Get Punchline') {
+      setBtnTxt('Get Another Joke');
+    } else if (btnTxt === 'Get Another Joke') {
+      setJoke(0);
+      getJoke().then((response) => setJoke(response));
+      setBtnTxt('Get Punchline');
+    }
   };
 
   return (
-    <div>
-      <>
-        <h1>{jokeText.setup}</h1>
-        <h2>{btnText === 'Get Punchline!' ? jokeText.delivery : ''}</h2>
-        <div>
-          {btnText === 'Get a Joke!' || btnText === 'Get Another Joke?' ? (
-            <button type="button" onClick={jokeGetter}>
-              {btnText}
-            </button>
-          ) : (
-            <button type="button" onClick={() => setButton('Get Another Joke?')}>
-              {btnText}
-            </button>
-          )}
-        </div>
-      </>
-    </div>
+    <>
+      <div
+        className="text-center d-flex flex-column justify-content-center align-content-center"
+        style={{
+          height: '90vh',
+          padding: '30px',
+          maxWidth: '400px',
+          margin: '0 auto',
+        }}
+      >
+        <h2>{btnTxt === 'Get Punchline' ? joke.setup : joke.delivery}</h2>
+        <button type="button" onClick={jokeGetter}>
+          {btnTxt}
+        </button>
+      </div>
+    </>
   );
 }
 
